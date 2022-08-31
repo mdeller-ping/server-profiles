@@ -1,5 +1,3 @@
-# server-profile-pingauthorize
-
 As an example, to deploy the Credit Bureau sample config to your PingAuthorize, add the following to your Helm values.yaml:
 
 ```
