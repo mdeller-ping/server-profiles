@@ -32,7 +32,7 @@ dsconfig set-policy-decision-service-prop \
 
 dsconfig create-external-server \
     --server-name PingFederate  \
-    --type api  \
+    --type http  \
     --set base-url:https://${PF_ENGINE_PUBLIC_HOSTNAME}:${PF_ENGINE_PUBLIC_PORT_HTTPS}  \
     --set hostname-verification-method:allow-all \
     --no-prompt
