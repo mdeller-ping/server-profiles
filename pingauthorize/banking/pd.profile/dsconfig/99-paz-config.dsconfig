@@ -47,20 +47,19 @@ dsconfig create-access-token-validator \
     --set "client-secret:AACv+2Hg93qb2YQTg5rwwXj9EaVLKHlujcM=" \
     --no-prompt
 
-# External server and gateway API of Credit Bureau APIs
+# External server and gateway
 
 dsconfig create-external-server \
-    --server-name credit-bureau-http  \
+    --server-name banking-api  \
     --type api  \
-    --set base-url:https://api.sandbox.equifax.com  \
+    --set base-url:https://httpbin.org  \
     --set hostname-verification-method:allow-all \
     --no-prompt
 
 dsconfig create-gateway-api-endpoint \
-    --endpoint-name credit-report-api  \
+    --endpoint-name banking-http  \
     --set access-token-validator:PingFederate  \
-    --set inbound-base-path:/credit-report  \
-    --set outbound-base-path:/business/consumer-credit/v1/reports/credit-report  \
-    --set api-server:credit-bureau-http  \
+    --set inbound-base-path:/banking  \
+    --set outbound-base-path:/anything  \
+    --set api-server:banking-api  \
     --no-prompt
-
