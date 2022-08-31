@@ -32,7 +32,7 @@ dsconfig set-policy-decision-service-prop \
 
 dsconfig create-external-server \
     --server-name PingFederate  \
-    --type http  \
+    --type api  \
     --set base-url:https://${PF_ENGINE_PUBLIC_HOSTNAME}:${PF_ENGINE_PUBLIC_PORT_HTTPS}  \
     --set hostname-verification-method:allow-all \
     --no-prompt
@@ -43,20 +43,20 @@ dsconfig create-access-token-validator \
     --set subject-claim-name:Username  \
     --set enabled:true  \
     --set authorization-server:PingFederate  \
-    --set client-id:TokenValidator  \
+    --set client-id:pingdirectory  \
     --set "client-secret:AACv+2Hg93qb2YQTg5rwwXj9EaVLKHlujcM=" \
     --no-prompt
 
 # External server and gateway API of Credit Bureau APIs
 
 dsconfig create-external-server \
-    --server-name banking-api  \
+    --server-name credit-bureau-http  \
     --type api  \
     --set base-url:https://api.sandbox.equifax.com  \
     --set hostname-verification-method:allow-all \
     --no-prompt
 
-dsconfig banking-gateway \
+dsconfig create-gateway-api-endpoint \
     --endpoint-name credit-report-api  \
     --set access-token-validator:PingFederate  \
     --set inbound-base-path:/credit-report  \
