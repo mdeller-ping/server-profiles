@@ -1,0 +1,17 @@
+
+# disable The Console is not configured with a trust store so it will automatically trust the certificate warning
+
+dsconfig set-web-application-extension-prop \
+    --extension-name Console  \
+    --set trust-store-file:config/truststore  \
+    --set trust-store-type:JKS \
+    --no-prompt
+
+# reduce chatter in log file
+
+dsconfig set-log-publisher-prop \
+    --publisher-name "File-Based Trace Logger"  \
+    --add exclude-path-pattern:/available-or-degraded-state \
+    --add exclude-path-pattern:/available-state \
+    --no-prompt
+
