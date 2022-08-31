@@ -1,0 +1,66 @@
+dsconfig set-trust-manager-provider-prop \
+    --provider-name "Blind Trust" \
+    --set enabled:true \
+    --no-prompt
+
+dsconfig create-access-token-validator \
+    --validator-name mock-atv  \
+    --type mock  \
+    --set enabled:true \
+    --no-prompt
+
+dsconfig create-external-server \
+    --server-name ${PAZP_ENGINE_PRIVATE_HOSTNAME}  \
+    --type policy  \
+    --set base-url:https://${PAZP_ENGINE_PRIVATE_HOSTNAME}:${PAZP_ENGINE_PRIVATE_PORT_HTTPS}  \
+    --set hostname-verification-method:allow-all  \
+    --set "trust-manager-provider:Blind Trust"  \
+    --set shared-secret:AABHZ4qkGPerzNMHAyxBn94GTtx7Ztl3drw=  \
+    --set "branch:defaultPolicies.SNAPSHOT" \
+    --no-prompt
+
+dsconfig set-policy-decision-service-prop \
+    --set pdp-mode:external  \
+    --set policy-server:${PAZP_ENGINE_PRIVATE_HOSTNAME}  \
+    --no-prompt
+
+dsconfig set-policy-decision-service-prop \
+    --set trust-framework-version:v2  \
+    --no-prompt
+
+# PingFederate for Token Validation
+
+dsconfig create-external-server \
+    --server-name PingFederate  \
+    --type http  \
+    --set base-url:https://${PF_ENGINE_PUBLIC_HOSTNAME}:${PF_ENGINE_PUBLIC_PORT_HTTPS}  \
+    --set hostname-verification-method:allow-all \
+    --no-prompt
+
+dsconfig create-access-token-validator \
+    --validator-name PingFederate  \
+    --type ping-federate  \
+    --set subject-claim-name:Username  \
+    --set enabled:true  \
+    --set authorization-server:PingFederate  \
+    --set client-id:TokenValidator  \
+    --set "client-secret:AACv+2Hg93qb2YQTg5rwwXj9EaVLKHlujcM=" \
+    --no-prompt
+
+# External server and gateway API of Credit Bureau APIs
+
+dsconfig create-external-server \
+    --server-name banking-api  \
+    --type api  \
+    --set base-url:https://api.sandbox.equifax.com  \
+    --set hostname-verification-method:allow-all \
+    --no-prompt
+
+dsconfig banking-gateway \
+    --endpoint-name credit-report-api  \
+    --set access-token-validator:PingFederate  \
+    --set inbound-base-path:/credit-report  \
+    --set outbound-base-path:/business/consumer-credit/v1/reports/credit-report  \
+    --set api-server:credit-bureau-http  \
+    --no-prompt
+
